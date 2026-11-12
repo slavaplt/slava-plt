@@ -116,7 +116,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media (max-height:800px) and (min-width:901px){.hero{padding-top:96px;padding-bottom:40px}.stats{margin-top:32px}.hero__ctas{margin-top:24px}.hero__lead{margin-top:20px}}
 .hero__echo{display:block;position:relative;height:1.05em;margin-top:.04em}
 .echo{position:absolute;left:0;top:0;text-transform:uppercase;font-size:1.06em;letter-spacing:.01em;white-space:nowrap}
-.echo--1,.echo--2{color:transparent;-webkit-text-stroke:1px rgba(240,178,40,.55)}
+.echo--2{color:transparent;-webkit-text-stroke:1px rgba(240,178,40,.45)}
+.hero__echo{font-size:1.18em}
 .hero__lead{margin-top:30px;max-width:520px;color:var(--muted);font-size:clamp(16px,1.3vw,19px)}
 .hero__lead b{color:var(--honey-l);font-weight:600}
 .hero__ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
@@ -160,7 +161,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .marquee--dark span{font-style:italic;font-weight:400}
 
 /* ===== showreel ===== */
-.reel{position:relative;height:260vh}
+.reel{position:relative;height:300vh}
 .reel__pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center}
 .reel__title{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2vw;font-family:var(--serif);font-weight:900;font-size:clamp(70px,17vw,280px);line-height:1;pointer-events:none;z-index:1}
 .reel__word--r{font-style:italic;font-weight:400;color:var(--honey)}
@@ -408,3 +409,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media (min-width:901px) and (max-width:1100px){.float-card--2{right:1%;top:12%}}
 .mobile-menu{transition:clip-path .7s var(--ease),visibility 0s .7s}
 .mobile-menu.is-open{transition:clip-path .7s var(--ease),visibility 0s}
+
+/* ===== round-2 fixes ===== */
+.result{justify-content:flex-start;gap:18px}
+.results__nums{align-self:start}
+.reviews__col:empty{display:none}
+@media (max-width:700px){.gift__banner{width:min(100%,320px)}}
+@media (min-width:701px) and (max-width:1100px) and (orientation:portrait){.work{width:clamp(220px,min(62vw,calc(62vh * 9 / 16)),400px)}}
+.footer__top,.contact__ig{min-height:44px;display:inline-flex;align-items:center}
+.cursor.is-link .cursor__dot{opacity:0}
