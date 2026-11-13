@@ -48,6 +48,7 @@ window.SITE = {
     { name: 'ZVUKM TV', meta: 'YouTube · 4,04 млн', note: 'монтаж видео для канала', url: 'https://youtu.be/R9BYpPjjhmY' },
     { name: 'Известные люди', meta: 'YouTube · 211 тыс.', note: 'долгосрочное сотрудничество · Shorts' },
     { name: 'wellness for life', meta: 'YouTube · 102 тыс.', note: 'долгосрочное сотрудничество' },
+    { name: 'Иван Ижко', meta: 'Instagram · 12,6 тыс.', note: 'сотрудничаем сейчас', url: 'https://www.instagram.com/ivan.izhko' },
     { name: 'andrei_on_the_trip', meta: 'Instagram · 13,8 тыс.', note: 'сотрудничаем сейчас' }
   ],
   faq: [
