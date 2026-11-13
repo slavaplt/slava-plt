@@ -410,10 +410,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @keyframes buck{0%,100%{translate:0 0}50%{translate:0 -.12em}}
 
 /* пузырь «Привет» — слева от аватара, хвостик к нему */
-.bubble{top:23%;left:auto;right:82%;border-radius:18px 18px 4px 18px;z-index:3}
+.bubble{top:28%;left:auto;right:82%;border-radius:18px 18px 4px 18px;z-index:3}
 .bubble::after{content:"";position:absolute;right:-7px;bottom:10px;width:14px;height:14px;background:var(--cream);clip-path:polygon(0 0,100% 50%,0 100%)}
-@media (max-width:900px){.bubble{top:22%;right:78%;left:auto}}
-@media (max-width:480px){.bubble{top:23%;right:auto;left:-10%;font-size:12px;padding:9px 13px}}
+@media (max-width:900px){.bubble{top:27%;right:78%;left:auto}}
+@media (max-width:480px){.bubble{top:28%;right:auto;left:-10%;font-size:12px;padding:9px 13px}}
 
 
 /* вертикальные работы: обычная лента + ползунок */

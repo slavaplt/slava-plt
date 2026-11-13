@@ -384,25 +384,10 @@
     }).join(' ');
   });
 
-  /* ---------- preloader → intro ---------- */
-  var pc = { v: 0 }, cnt = $('.preloader__count span'), fill = $('.preloader__text--fill');
-  var loaded = false;
-  window.addEventListener('load', function () { loaded = true; });
-  setTimeout(function () { loaded = true; }, 3500);
-  var seen = false; try { seen = sessionStorage.getItem('plt_seen') === '1'; sessionStorage.setItem('plt_seen', '1'); } catch (e) {}
-  var preTl = gsap.timeline();
-  if (seen) preTl.timeScale(2.5);
-  preTl.to(pc, {
-    v: 90, duration: 1.4, ease: 'power2.inOut',
-    onUpdate: function () { cnt.textContent = Math.round(pc.v); fill.style.clipPath = 'inset(' + (100 - pc.v) + '% 0 0 0)'; }
-  });
-  preTl.add(function waitLoad() {
-    if (!loaded) { preTl.pause(); var iv = setInterval(function () { if (loaded) { clearInterval(iv); preTl.resume(); } }, 80); }
-  });
-  preTl.to(pc, { v: 100, duration: .35, onUpdate: function () { cnt.textContent = Math.round(pc.v); fill.style.clipPath = 'inset(' + (100 - pc.v) + '% 0 0 0)'; } });
-  preTl.to('.preloader', { yPercent: -100, duration: 1.05, ease: 'power4.inOut' }, '+=.15');
-  preTl.add(function () { finishPreloader(); lenis.start(); ScrollTrigger.refresh(); }, '-=.2');
-  preTl.add(intro(), '-=.55');
+  /* ---------- сразу первый экран, без загрузки ---------- */
+  finishPreloader(); lenis.start();
+  intro();
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
 
   function intro() {
     var tl = gsap.timeline();
