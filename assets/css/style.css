@@ -2,7 +2,7 @@
 @font-face{font-family:"Playfair";src:url(../fonts/PlayfairDisplay-Black-LF.woff2) format("woff2");font-weight:900;font-display:swap}
 @font-face{font-family:"Playfair";src:url(../fonts/PlayfairDisplay-Bold-LF.woff2) format("woff2");font-weight:700;font-display:swap}
 @font-face{font-family:"Playfair";src:url(../fonts/PlayfairDisplay-Italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:"Pacifico";src:url(../fonts/Pacifico-Cyr.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Prata";src:url(../fonts/Prata-Cyr.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Mont";src:url(../fonts/Montserrat-Medium.woff2) format("woff2");font-weight:500;font-display:swap}
 @font-face{font-family:"Mont";src:url(../fonts/Montserrat-SemiBold.woff2) format("woff2");font-weight:600 800;font-display:swap}
 
@@ -11,7 +11,7 @@
   --honey:#F0B228; --honey-l:#FFD678; --amber:#C4800E; --deep:#8A5406;
   --cream:#F6ECD6; --muted:rgba(246,236,214,.62); --line:rgba(246,236,214,.12);
   --serif:"Playfair",Georgia,"Times New Roman",serif;
-  --script:"Pacifico","Brush Script MT",cursive;
+  --display:"Prata","Playfair",Georgia,serif;
   --sans:"Mont",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --pad:clamp(16px,4vw,56px);
   --r:22px;
@@ -395,26 +395,26 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .footer__top,.contact__ig{min-height:44px;display:inline-flex;align-items:center}
 
 /* ===== round-3: правки Славы ===== */
-/* «дороже» — рукописный акцент без обводки */
-.hero__word{position:relative;display:inline-block;margin-top:.02em;padding:0 .08em .12em 0}
-.hero__word-text{display:inline-block;font-family:var(--script);font-weight:400;font-style:normal;font-size:1.12em;line-height:1.15;letter-spacing:-.01em;color:var(--honey);background:linear-gradient(100deg,var(--amber) 0%,var(--honey) 35%,var(--honey-l) 55%,var(--honey) 75%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;transform:rotate(-3deg);transform-origin:0 100%;text-shadow:none}
-.hero__swash{position:absolute;left:2%;right:-4%;bottom:-.02em;width:100%;height:.32em;overflow:visible}
-.hero__swash path{fill:none;stroke:var(--honey);stroke-width:5;stroke-linecap:round;stroke-dasharray:520;stroke-dashoffset:0;vector-effect:non-scaling-stroke;opacity:.85}
+/* «ДОРОЖЕ» — премиальный антиква-шрифт, позади контурные доллары */
+.hero__word{position:relative;display:inline-block;margin:.08em 0 .04em}
+.hero__word-text{position:relative;z-index:1;display:inline-block;font-family:var(--display);font-weight:400;font-size:1.08em;line-height:1;text-transform:uppercase;letter-spacing:.04em;background:linear-gradient(100deg,var(--amber) 0%,var(--honey) 35%,var(--honey-l) 55%,var(--honey) 75%,var(--amber) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero__bucks{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero__bucks i{position:absolute;top:50%;font-family:var(--serif);font-style:normal;font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:1.5px rgba(240,178,40,.75);animation:buck 6s ease-in-out infinite}
+.hero__bucks i:nth-child(1){left:calc(100% + .12em);font-size:.95em;margin-top:-.62em;rotate:-12deg}
+.hero__bucks i:nth-child(2){left:calc(100% + .78em);font-size:.6em;margin-top:-.95em;rotate:14deg;animation-delay:-1.5s;-webkit-text-stroke-color:rgba(240,178,40,.5)}
+.hero__bucks i:nth-child(3){left:calc(100% + 1.25em);font-size:.75em;margin-top:-.2em;rotate:-6deg;animation-delay:-3s;-webkit-text-stroke-color:rgba(240,178,40,.4)}
+.hero__bucks i:nth-child(4){left:calc(100% + 1.95em);font-size:.45em;margin-top:-.75em;rotate:18deg;animation-delay:-4.5s;-webkit-text-stroke-color:rgba(240,178,40,.3)}
+.hero__bucks i:nth-child(5){left:calc(100% + 2.35em);font-size:.55em;margin-top:-.05em;rotate:-16deg;animation-delay:-2.2s;-webkit-text-stroke-color:rgba(240,178,40,.2)}
+@media (min-width:901px){.hero__bucks i:nth-child(2){left:calc(100% + 1em)}.hero__bucks i:nth-child(3){left:calc(100% + 1.7em)}.hero__bucks i:nth-child(4){left:calc(100% + 2.5em)}.hero__bucks i:nth-child(5){left:calc(100% + 3.1em)}}
+@media (max-width:480px){.hero__bucks i:nth-child(n+4){display:none}.hero__bucks i:nth-child(3){left:calc(100% + 1.1em)}}
+@keyframes buck{0%,100%{translate:0 0}50%{translate:0 -.12em}}
 
 /* пузырь «Привет» — слева от аватара, хвостик к нему */
-.bubble{top:14%;left:auto;right:84%;border-radius:18px 18px 4px 18px;z-index:3}
+.bubble{top:23%;left:auto;right:82%;border-radius:18px 18px 4px 18px;z-index:3}
 .bubble::after{content:"";position:absolute;right:-7px;bottom:10px;width:14px;height:14px;background:var(--cream);clip-path:polygon(0 0,100% 50%,0 100%)}
-@media (max-width:900px){.bubble{top:6%;right:80%;left:auto}}
-@media (max-width:480px){.bubble{top:-4%;right:auto;left:50%;transform-origin:50% 100%;translate:-50% 0;border-radius:18px}.bubble::after{right:auto;left:50%;bottom:-7px;margin-left:-7px;clip-path:polygon(0 0,100% 0,50% 100%)}}
+@media (max-width:900px){.bubble{top:22%;right:78%;left:auto}}
+@media (max-width:480px){.bubble{top:23%;right:auto;left:-10%;font-size:12px;padding:9px 13px}}
 
-/* боковые надписи «листайте вниз» */
-.rail{position:fixed;top:0;bottom:0;z-index:5;width:28px;overflow:hidden;pointer-events:none;display:flex;justify-content:center}
-.rail--l{left:6px}.rail--r{right:6px}
-.rail__track{display:flex;flex-direction:column;gap:60px;writing-mode:vertical-rl;font-size:11px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:rgba(240,178,40,.75);white-space:nowrap;animation:railDown 22s linear infinite}
-.rail--l .rail__track{transform:rotate(180deg);animation-name:railUp}
-@keyframes railDown{from{translate:0 -50%}to{translate:0 0}}
-@keyframes railUp{from{translate:0 0}to{translate:0 -50%}}
-@media (max-width:900px){.rail{display:none}}
 
 /* вертикальные работы: обычная лента + ползунок */
 .works{padding:clamp(70px,10vh,120px) 0 clamp(40px,6vh,70px)}
@@ -496,8 +496,3 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .other__kicker{color:rgba(17,13,8,.7);font-weight:600}
 .other__price{color:var(--bg)}
 .other__price small,.other__card p:last-child{color:rgba(17,13,8,.75)}
-/* боковые надписи: мягкое появление */
-.rail{animation:railIn 1.2s 1.6s both}
-@keyframes railIn{from{opacity:0}to{opacity:1}}
-.rail__track{writing-mode:horizontal-tb;align-items:center}
-.rail__track span{writing-mode:vertical-rl;display:block}

@@ -407,8 +407,8 @@
   function intro() {
     var tl = gsap.timeline();
     tl.from('.hero__title .line .ch', { yPercent: 115, rotate: 6, duration: 1, ease: 'power4.out', stagger: .022 })
-      .from('.hero__word-text', { yPercent: 60, opacity: 0, skewX: -12, duration: 1.1, ease: 'power4.out' }, '-=.7')
-      .fromTo('.hero__swash path', { strokeDashoffset: 520 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, '-=.6')
+      .from('.hero__word-text', { yPercent: 70, opacity: 0, letterSpacing: '.3em', duration: 1.2, ease: 'power4.out' }, '-=.7')
+      .from('.hero__bucks i', { scale: 0, rotate: -40, opacity: 0, duration: .9, ease: 'back.out(2)', stagger: .08 }, '-=.8')
       .from('.hero__kicker span, .hero__kicker i', { y: 20, opacity: 0, stagger: .06, duration: .6 }, .2)
       .from('.hero__lead, .hero__ctas, .stats', { y: 30, opacity: 0, stagger: .1, duration: .8, ease: 'power3.out' }, '-=.9')
       .from('.hero__avatar img', { yPercent: 30, opacity: 0, duration: 1.1, ease: 'power3.out' }, .3)
@@ -468,7 +468,6 @@
       .to(o, { k: 0, duration: 1, ease: 'power2.inOut', onUpdate: function () { vp.scrollLeft = o.k * m; } });
   } });
   /* боковые надписи «листайте вниз» — только в начале сайта */
-  gsap.to('.rail__track', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.wide', start: 'top 80%', end: 'top 30%', scrub: true } });
   gsap.from('.works__head .h2', { y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.works', start: 'top 75%' } });
 
   /* ---------- wide works ---------- */
