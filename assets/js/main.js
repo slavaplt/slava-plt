@@ -6,11 +6,17 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var big = function (n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(2).replace('.', ',') + '\u00a0млн';
+    if (n >= 1e4) { var t = n / 1e3; return (t % 1 ? t.toFixed(1).replace('.', ',') : t) + '\u00a0тыс.'; }
+    return fmt(n);
+  };
   var fmt = function (n) { return n.toLocaleString('ru-RU').replace(/,/g, ' '); };
   var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4v16l14-8z"/></svg>';
   var hasGsap = !!(window.gsap && window.ScrollTrigger);
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
+  var dragMoved = false;
   /* ---------- build content ---------- */
   var track = $('.works__track');
   D.works.forEach(function (w, i) {
@@ -47,7 +53,7 @@
   var rows = [$('.styles__row--1'), $('.styles__row--2')];
   var half = Math.ceil(D.styles.length / 2);
   [D.styles.slice(0, half), D.styles.slice(half)].forEach(function (list, r) {
-    var html = list.concat(list).map(function (s) {
+    var html = list.concat(list, list).map(function (s) {
       return '<figure class="style-card"><img src="assets/img/style_' + s[0] + '.webp" alt="Стиль: ' + s[1] + '" loading="lazy"><span>' + s[1] + '</span></figure>';
     }).join('');
     rows[r].innerHTML = html;
@@ -112,11 +118,11 @@
   });
   var resBox = $('.results__nums');
   D.results.forEach(function (r) {
-    resBox.insertAdjacentHTML('beforeend', '<div class="result"><b data-count="' + r.n + '">' + fmt(r.n) + '</b><span>' + r.label + '</span></div>');
+    resBox.insertAdjacentHTML('beforeend', '<div class="result"><b data-count="' + r.n + '">' + big(r.n) + '</b><span>' + r.label + '</span></div>');
   });
   var cl = $('.clients__list');
   D.clients.forEach(function (c) {
-    cl.insertAdjacentHTML('beforeend', '<li><b>' + c.name + '</b><span>' + c.meta + '</span><em>' + c.note + '</em></li>');
+    cl.insertAdjacentHTML('beforeend', '<li><b>' + (c.url ? '<a href="' + c.url + '" target="_blank" rel="noopener">' + c.name + ' ↗</a>' : c.name) + '</b><span>' + c.meta + '</span><em>' + c.note + '</em></li>');
   });
 
   var faq = $('.faq__list');
@@ -136,8 +142,6 @@
   });
 
   /* вертикальный шоурил для портретных экранов */
-  var rv = $('.reel__video');
-  if (window.matchMedia('(orientation: portrait)').matches) { rv.dataset.src = rv.dataset.srcV; rv.poster = 'assets/img/showreel_v_poster.webp'; }
   /* Safari не умеет прозрачный VP9 — показываем статичный кадр баннера */
   var ua = navigator.userAgent, isApple = /iP(hone|ad|od)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) || (/Macintosh/.test(ua) && !/Chrome|Chromium|Edg|Firefox/.test(ua));
   if (isApple) { var gb = $('.gift__banner'); var im = new Image(); im.src = gb.poster; im.className = 'gift__banner'; im.alt = ''; gb.replaceWith(im); }
@@ -179,12 +183,12 @@
     if (lastFocus) lastFocus.focus({ preventScroll: true });
   }
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('.work, .wide-item__media');
+    var t = e.target.closest('.work, .wide-item__media, .i360__media');
     if (t && !dragMoved) openLB(t);
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !lb.hidden) closeLB();
-    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.work, .wide-item__media')) { e.preventDefault(); openLB(e.target); }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.work, .wide-item__media, .i360__media')) { e.preventDefault(); openLB(e.target); }
     if (e.key === 'Tab' && !lb.hidden) { e.preventDefault(); (document.activeElement === lbv ? $('.lightbox__close') : lbv).focus(); }
   });
   $('.lightbox__close').addEventListener('click', closeLB);
@@ -241,15 +245,7 @@
   $$('a', mm).forEach(function (a) { a.addEventListener('click', function () { if (burger.getAttribute('aria-expanded') === 'true') burger.click(); }); });
 
   /* ---------- cursor + magnetic + tilt ---------- */
-  var dragMoved = false;
   if (fine && !reduce) {
-    var cur = $('.cursor'), mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my;
-    window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; });
-    (function loop() { cx += (mx - cx) * .2; cy += (my - cy) * .2; cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)'; requestAnimationFrame(loop); })();
-    document.addEventListener('mouseover', function (e) {
-      cur.classList.toggle('is-view', !!e.target.closest('.work, .wide-item__media'));
-      cur.classList.toggle('is-link', !!e.target.closest('a, button, input') && !e.target.closest('.work, .wide-item__media'));
-    });
     $$('.magnetic').forEach(function (b) {
       b.addEventListener('mousemove', function (e) {
         var r = b.getBoundingClientRect();
@@ -267,13 +263,85 @@
   }
 
   /* ---------- header hide/show ---------- */
-  var header = $('.header'), lastY = 0;
+  var header = $('.header'), lastY = 0, nearTop = false;
   function onScrollHeader(y) {
     header.classList.toggle('is-solid', y > 40);
-    if (y > 300 && y > lastY + 4) header.classList.add('is-hidden');
+    if (y > 300 && y > lastY + 4 && !nearTop) header.classList.add('is-hidden');
     else if (y < lastY - 4 || y < 300) header.classList.remove('is-hidden');
     lastY = y;
   }
+  /* меню появляется, когда курсор у верхнего края экрана */
+  if (fine) {
+    window.addEventListener('mousemove', function (e) {
+      var top = e.clientY < 90 || (nearTop && e.clientY < 120 && header.contains(e.target));
+      if (top && !nearTop) { nearTop = true; header.classList.remove('is-hidden'); }
+      else if (!top && nearTop && e.clientY > 140) { nearTop = false; if (lastY > 300) header.classList.add('is-hidden'); }
+    }, { passive: true });
+  }
+
+  /* ---------- vertical works: slider ---------- */
+  var vp = $('.works__viewport'), rail = $('.slider__rail'), thumb = $('.slider__thumb'), fill = $('.slider__fill');
+  function maxScroll() { return Math.max(1, vp.scrollWidth - vp.clientWidth); }
+  function syncThumb() {
+    var rw = rail.clientWidth, tw = Math.max(90, rw * vp.clientWidth / vp.scrollWidth), k = vp.scrollLeft / maxScroll();
+    thumb.style.width = tw + 'px';
+    var x = (rw - tw) * k;
+    thumb.style.transform = 'translateX(' + x + 'px)';
+    fill.style.width = (x + tw / 2) + 'px';
+    rail.setAttribute('aria-valuenow', Math.round(k * 100));
+  }
+  vp.addEventListener('scroll', syncThumb, { passive: true });
+  window.addEventListener('resize', syncThumb);
+  function railTo(clientX, grabOffset) {
+    var r = rail.getBoundingClientRect(), tw = thumb.offsetWidth;
+    var k = Math.min(1, Math.max(0, (clientX - r.left - grabOffset) / (r.width - tw)));
+    vp.scrollLeft = k * maxScroll();
+  }
+  var grab = null;
+  thumb.addEventListener('pointerdown', function (e) {
+    e.preventDefault(); thumb.setPointerCapture(e.pointerId);
+    grab = e.clientX - thumb.getBoundingClientRect().left; rail.classList.add('is-drag');
+    vp.style.scrollBehavior = 'auto';
+  });
+  thumb.addEventListener('pointermove', function (e) { if (grab !== null) railTo(e.clientX, grab); });
+  thumb.addEventListener('pointerup', function () { grab = null; rail.classList.remove('is-drag'); vp.style.scrollBehavior = ''; });
+  rail.addEventListener('pointerdown', function (e) { if (e.target.closest('.slider__thumb')) return; vp.style.scrollBehavior = 'smooth'; railTo(e.clientX, thumb.offsetWidth / 2); });
+  function step(dir) { var c = $('.work', vp); vp.style.scrollBehavior = 'smooth'; vp.scrollLeft += dir * (c ? c.offsetWidth + 20 : 300) * 2; }
+  $('.slider__btn--prev').addEventListener('click', function () { step(-1); });
+  $('.slider__btn--next').addEventListener('click', function () { step(1); });
+  rail.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+  /* перетаскивание мышью (на телефоне — обычный свайп) */
+  function dragScroll(el, onMove) {
+    var down = false, sx = 0, sl = 0;
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; dragMoved = false; sx = e.clientX; sl = el.scrollLeft; el.classList.add('is-grab'); });
+    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 6) dragMoved = true; el.scrollLeft = sl - dx; if (onMove) onMove(); });
+    window.addEventListener('pointerup', function () { if (!down) return; down = false; el.classList.remove('is-grab'); setTimeout(function () { dragMoved = false; }, 50); });
+    el.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  }
+  dragScroll(vp);
+  /* ряды стилей: можно тянуть, и они сами едут при прокрутке страницы */
+  var scrollers = $$('.styles__scroller');
+  scrollers.forEach(function (sc) {
+    dragScroll(sc);
+    var third = function () { return sc.scrollWidth / 3; };
+    var init = function () { sc.scrollLeft = third(); };
+    window.addEventListener('load', init); init();
+    sc.addEventListener('scroll', function () {
+      var t = third();
+      if (sc.scrollLeft < t * .5) sc.scrollLeft += t;
+      else if (sc.scrollLeft > t * 1.5) sc.scrollLeft -= t;
+    }, { passive: true });
+  });
+  var lastPageY = window.scrollY;
+  function moveRows(y) {
+    var d = y - lastPageY; lastPageY = y;
+    scrollers.forEach(function (sc) { sc.scrollLeft += d * .6 * +sc.dataset.dir; });
+  }
+  window.addEventListener('scroll', function () { if (!lenis) moveRows(window.scrollY); }, { passive: true });
+  setTimeout(syncThumb, 0);
 
   /* ---------- no-GSAP / reduced motion fallback ---------- */
   function finishPreloader() {
@@ -286,18 +354,15 @@
     $$('.about__chunk').forEach(function (ch) { ch.classList.add('is-active'); });
     $$('.wide-item__media').forEach(function (m) { m.style.clipPath = 'none'; });
     window.addEventListener('scroll', function () { onScrollHeader(window.scrollY); }, { passive: true });
-    $('.works__pin').style.height = 'auto';
-    $('.works__track').style.cssText = 'overflow-x:auto;width:auto;padding-bottom:20px;scroll-snap-type:x mandatory';
     $$('.about__chunk').forEach(function (ch) {
       new IntersectionObserver(function (e) { if (e[0].isIntersecting) setPose(+ch.dataset.pose); }, { threshold: .6 }).observe(ch);
     });
-    $('.reel__frame').style.clipPath = 'none';
     return;
   }
 
   /* ================= GSAP ================= */
   lenis = new Lenis({ duration: 1.15, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.4 });
-  lenis.on('scroll', function (e) { ScrollTrigger.update(); onScrollHeader(e.scroll); });
+  lenis.on('scroll', function (e) { ScrollTrigger.update(); onScrollHeader(e.scroll); moveRows(e.scroll); });
   gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
   gsap.ticker.lagSmoothing(0);
   lenis.stop();
@@ -342,13 +407,13 @@
   function intro() {
     var tl = gsap.timeline();
     tl.from('.hero__title .line .ch', { yPercent: 115, rotate: 6, duration: 1, ease: 'power4.out', stagger: .022 })
-      .from('.echo', { y: 40, opacity: 0, duration: .9, ease: 'power3.out', stagger: .1 }, '-=.7')
-      .to('.echo--2', { y: '-0.1em', duration: 1.1, ease: 'power3.out' }, '<')
+      .from('.hero__word-text', { yPercent: 60, opacity: 0, skewX: -12, duration: 1.1, ease: 'power4.out' }, '-=.7')
+      .fromTo('.hero__swash path', { strokeDashoffset: 520 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, '-=.6')
       .from('.hero__kicker span, .hero__kicker i', { y: 20, opacity: 0, stagger: .06, duration: .6 }, .2)
       .from('.hero__lead, .hero__ctas, .stats', { y: 30, opacity: 0, stagger: .1, duration: .8, ease: 'power3.out' }, '-=.9')
       .from('.hero__avatar img', { yPercent: 30, opacity: 0, duration: 1.1, ease: 'power3.out' }, .3)
       .from('.hero__avatar-card', { scaleY: 0, transformOrigin: '50% 100%', duration: .9, ease: 'power3.out' }, .3)
-      .from('.bubble', { scale: 0, transformOrigin: '0% 100%', duration: .6, ease: 'back.out(2)' }, 1.1)
+      .from('.bubble', { scale: 0, transformOrigin: '100% 50%', duration: .6, ease: 'back.out(2)' }, 1.1)
       .from('.float-card', { opacity: 0, scale: .6, duration: 1, stagger: .1, ease: 'power3.out' }, .4)
       .add(countStats, .9);
     return tl;
@@ -364,7 +429,6 @@
 
   /* ---------- hero scroll-out ---------- */
   gsap.to('.hero__inner', { yPercent: -18, opacity: .2, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('.echo--2', { x: '-0.17em', ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   gsap.to('.hero__avatar', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
   $$('.float-card').forEach(function (f) {
     var d = +f.dataset.depth;
@@ -394,49 +458,17 @@
     });
   });
 
-  /* ---------- showreel expand ---------- */
-  var reelTl = gsap.timeline({ scrollTrigger: { trigger: '.reel', start: 'top top', end: 'bottom bottom', scrub: .6 } });
-  reelTl.fromTo('.reel__frame', { clipPath: 'inset(38% 41% 38% 41% round 24px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 1 })
-    .to('.reel__word--l', { xPercent: -120, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
-    .to('.reel__word--r', { xPercent: 120, opacity: 0, ease: 'power2.in', duration: .7 }, 0)
-    .to('.reel__caption', { opacity: 1, y: 0, duration: .25 }, .85)
-    .to({}, { duration: .8 });
-
-  /* ---------- vertical works: horizontal scroll ---------- */
-  var cards = $$('.work');
-  var hTween = gsap.to(track, {
-    x: function () { return -(track.scrollWidth - window.innerWidth); },
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '.works', pin: '.works__pin', start: 'top top',
-      end: function () { return '+=' + (track.scrollWidth - window.innerWidth + window.innerHeight * .3); },
-      scrub: .8, invalidateOnRefresh: true, anticipatePin: 1,
-      onUpdate: function (st) {
-        $('.works__progress span').style.transform = 'scaleX(' + st.progress + ')';
-        if (!fine) return;
-        var v = gsap.utils.clamp(-10, 10, st.getVelocity() / -300);
-        gsap.to(cards, { skewX: v * .3, rotate: v * .08, duration: .5, overwrite: 'auto' });
-      }
-    }
-  });
-  var firstVisible = cards.filter(function (c) { return c.offsetLeft < window.innerWidth; });
-  gsap.from(firstVisible, { y: 80, opacity: 0, rotate: 4, ease: 'power3.out', duration: 1, stagger: .08, scrollTrigger: { trigger: '.works', start: 'top 80%' } });
-  cards.forEach(function (c) {
-    if (firstVisible.indexOf(c) > -1) return;
-    gsap.from(c, {
-      y: 80, opacity: 0, rotate: 4, ease: 'power3.out', duration: 1,
-      scrollTrigger: { trigger: c, containerAnimation: hTween, start: 'left 105%', toggleActions: 'play none none reverse' }
-    });
-  });
-  /* фокус с клавиатуры: прокручиваем страницу к карточке, а не трек */
-  var pinEl = $('.works__pin');
-  track.addEventListener('focusin', function (e) {
-    var c = e.target.closest('.work'); if (!c) return;
-    pinEl.scrollLeft = 0;
-    var st = hTween.scrollTrigger, maxX = track.scrollWidth - window.innerWidth;
-    var k = gsap.utils.clamp(0, 1, (c.offsetLeft - window.innerWidth / 2 + c.offsetWidth / 2) / maxX);
-    lenis.scrollTo(st.start + (st.end - st.start) * k * (maxX / (maxX + window.innerHeight * .3)), { immediate: true });
-  });
+  /* ---------- vertical works: появление + подсказка ползунком ---------- */
+  gsap.from('.work', { y: 80, opacity: 0, rotate: 3, ease: 'power3.out', duration: 1, stagger: .07, scrollTrigger: { trigger: '.works__viewport', start: 'top 85%' } });
+  gsap.from('.slider', { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.slider', start: 'top 95%' } });
+  ScrollTrigger.create({ trigger: '.slider', start: 'top 85%', once: true, onEnter: function () {
+    var o = { k: 0 }, m = maxScroll();
+    gsap.timeline({ delay: .5 })
+      .to(o, { k: .35, duration: 1.1, ease: 'power2.inOut', onUpdate: function () { vp.scrollLeft = o.k * m; } })
+      .to(o, { k: 0, duration: 1, ease: 'power2.inOut', onUpdate: function () { vp.scrollLeft = o.k * m; } });
+  } });
+  /* боковые надписи «листайте вниз» — только в начале сайта */
+  gsap.to('.rail__track', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.wide', start: 'top 80%', end: 'top 30%', scrub: true } });
   gsap.from('.works__head .h2', { y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.works', start: 'top 75%' } });
 
   /* ---------- wide works ---------- */
@@ -447,6 +479,10 @@
     gsap.from($$('.wide-item__text > *', it), { y: 40, opacity: 0, stagger: .08, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: it, start: 'top 70%' } });
   });
 
+  gsap.fromTo('.i360__media', { clipPath: 'inset(10% 10% 10% 10% round 28px)', rotate: -3 }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', rotate: 0, ease: 'none', scrollTrigger: { trigger: '.i360', start: 'top 85%', end: 'top 30%', scrub: true } });
+  gsap.from('.i360__text > *', { y: 40, opacity: 0, stagger: .08, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.i360', start: 'top 70%' } });
+  gsap.from('.other__card', { y: 50, opacity: 0, stagger: .12, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.other', start: 'top 88%' } });
+
   /* ---------- section heads ---------- */
   $$('.section-head .h2').forEach(function (h) {
     if (h.closest('.works')) return;
@@ -454,8 +490,7 @@
   });
 
   /* ---------- styles rows ---------- */
-  gsap.fromTo('.styles__row--1', { xPercent: 0 }, { xPercent: -30, ease: 'none', scrollTrigger: { trigger: '.styles', start: 'top bottom', end: 'bottom top', scrub: true } });
-  gsap.fromTo('.styles__row--2', { xPercent: -30 }, { xPercent: 0, ease: 'none', scrollTrigger: { trigger: '.styles', start: 'top bottom', end: 'bottom top', scrub: true } });
+
 
   /* ---------- honey drip into price ---------- */
   var drip = $('.drip-path');
@@ -514,7 +549,7 @@
     var to = +el.dataset.count, o = { v: 0 };
     el.textContent = '0';
     ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: function () {
-      gsap.to(o, { v: to, duration: 2, ease: 'power2.out', onUpdate: function () { el.textContent = fmt(Math.round(o.v)); } });
+      gsap.to(o, { v: to, duration: 2, ease: 'power2.out', onUpdate: function () { el.textContent = big(o.v >= to ? to : Math.round(o.v / 100) * 100); } });
     } });
   });
   gsap.from('.clients li', { y: 30, opacity: 0, stagger: .07, duration: .7, ease: 'power3.out', scrollTrigger: { trigger: '.clients', start: 'top 85%' } });

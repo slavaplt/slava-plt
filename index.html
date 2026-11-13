@@ -32,7 +32,8 @@
 </div>
 
 <div class="grain" aria-hidden="true"></div>
-<div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"><em>смотреть</em></span></div>
+<div class="rail rail--l" aria-hidden="true"><div class="rail__track"><span>листайте вниз ↓</span><span>листайте вниз ↓</span><span>листайте вниз ↓</span><span>листайте вниз ↓</span><span>листайте вниз ↓</span><span>листайте вниз ↓</span></div></div>
+<div class="rail rail--r" aria-hidden="true"><div class="rail__track"><span>дальше интереснее ↓</span><span>дальше интереснее ↓</span><span>дальше интереснее ↓</span><span>дальше интереснее ↓</span><span>дальше интереснее ↓</span><span>дальше интереснее ↓</span></div></div>
 
 <!-- ===== HEADER ===== -->
 <header class="header">
@@ -74,10 +75,7 @@
     <p class="kicker hero__kicker"><span>монтаж</span><i>•</i><span>reels</span><i>•</i><span>визуал</span></p>
     <h1 class="hero__title">
       <span class="line"><span class="split">Сделаю ваши Reels</span></span>
-      <span class="hero__echo">
-        <span class="echo echo--2" aria-hidden="true">дороже</span>
-        <span class="echo echo--3 honey-text">дороже</span>
-      </span>
+      <span class="hero__word"><span class="hero__word-text">дороже</span><svg class="hero__swash" viewBox="0 0 420 40" preserveAspectRatio="none" aria-hidden="true"><path d="M6 30 C 90 8, 200 6, 300 16 S 400 30, 414 12"/></svg></span>
       <span class="line line--small"><span class="split">на вид</span></span>
     </h1>
     <p class="hero__lead">Монтирую Reels, Shorts и рекламу в DaVinci Resolve. Чем больше роликов, тем дешевле каждый: <b>от 150 ₽ за видео</b> при заказе от 1 000 роликов.</p>
@@ -97,9 +95,9 @@
   <div class="hero__avatar">
     <div class="hero__avatar-card"></div>
     <img src="assets/img/pose_point.webp" alt="Слава — пиксельный аватар, указывает на вас" width="660" height="1000">
-    <div class="bubble">Привет! Я Слава 👋</div>
+    <div class="bubble"><span>Привет! Я Слава</span> 👋</div>
   </div>
-  <a href="#reel" class="scroll-cue" aria-label="Листайте вниз"><span>листайте</span><i></i></a>
+  <a href="#works" class="scroll-cue" aria-label="Листайте вниз"><span>листайте</span><i></i></a>
 </section>
 
 <!-- ===== MARQUEE ===== -->
@@ -112,31 +110,21 @@
   </div></div>
 </section>
 
-<!-- ===== SHOWREEL (sticky expand) ===== -->
-<section class="reel" id="reel">
-  <div class="reel__pin">
-    <h2 class="reel__title" aria-label="Шоурил">
-      <span class="reel__word reel__word--l">Шоу</span>
-      <span class="reel__word reel__word--r">рил</span>
-    </h2>
-    <div class="reel__frame">
-      <video class="reel__video" data-src="assets/video/showreel.mp4" data-src-v="assets/video/showreel_v.mp4" poster="assets/img/showreel_poster.webp" muted loop playsinline preload="none"></video>
-      <div class="reel__shade"></div>
-      <p class="reel__caption">Нарезка из реальных проектов: эксперты, реклама, AI-визуал, влоги</p>
-    </div>
-  </div>
-</section>
-
 <!-- ===== VERTICAL WORKS (horizontal scroll) ===== -->
 <section class="works" id="works">
-  <div class="works__pin">
-    <header class="section-head works__head">
-      <p class="kicker">Портфолио</p>
-      <h2 class="h2">Вертикальные <em>работы</em></h2>
-      <p class="works__hint">Нажмите на ролик, чтобы смотреть со звуком</p>
-    </header>
-    <div class="works__track" role="list"></div>
-    <div class="works__progress"><span></span></div>
+  <header class="section-head works__head">
+    <p class="kicker">Портфолио</p>
+    <h2 class="h2">Вертикальные <em>работы</em></h2>
+    <p class="works__hint">Двигайте ползунок или листайте вбок. Нажмите на ролик, чтобы смотреть со звуком</p>
+  </header>
+  <div class="works__viewport" tabindex="-1"><div class="works__track" role="list"></div></div>
+  <div class="slider">
+    <button class="slider__btn slider__btn--prev" aria-label="Предыдущие ролики"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7"/></svg></button>
+    <div class="slider__rail" role="slider" tabindex="0" aria-label="Прокрутка вертикальных работ" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="slider__fill"></div>
+      <div class="slider__thumb"><span>⟵ листайте ⟶</span></div>
+    </div>
+    <button class="slider__btn slider__btn--next" aria-label="Следующие ролики"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></button>
   </div>
 </section>
 
@@ -149,12 +137,37 @@
   <div class="wide__list"></div>
 </section>
 
+<!-- ===== INSTA360 ===== -->
+<section class="i360" id="insta360">
+  <div class="i360__grid">
+    <div class="i360__media" tabindex="0" role="button" aria-label="Смотреть: монтаж с Insta360" data-id="insta360" data-tag="Insta360 · съёмка 360°" data-title="Камчатка: монтаж с камеры Insta360">
+      <img src="assets/img/insta360_poster.webp" alt="" loading="lazy">
+      <video muted loop playsinline preload="none" data-src="assets/video/insta360_loop.mp4"></video>
+      <span class="work__play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4v16l14-8z"/></svg></span>
+      <span class="i360__badge">360°</span>
+    </div>
+    <div class="i360__text">
+      <p class="kicker">Принимаю заказы</p>
+      <h2 class="h2">Монтаж с <em>Insta360</em></h2>
+      <p class="i360__lead">Снимаете на камеру 360°? Пришлите исходники: выберу лучшие ракурсы, сделаю повороты камеры, пролёты и динамичный ролик под Reels или YouTube. Слева — пример моего монтажа с Камчатки.</p>
+      <ul class="i360__list">
+        <li>Вертикаль 9:16 и горизонталь 16:9 из одной съёмки</li>
+        <li>Повороты, облёты и «невидимая палка»</li>
+        <li>Цвет, звук и субтитры</li>
+      </ul>
+      <p class="i360__price">Цена — <b>индивидуально</b>, зависит от объёма съёмки</p>
+      <a class="btn btn--honey magnetic" href="https://t.me/Slava_PLT" target="_blank" rel="noopener">Обсудить съёмку 360°</a>
+    </div>
+  </div>
+</section>
+
 <!-- ===== STYLES ===== -->
 <section class="styles" id="styles">
-  <div class="styles__rows" aria-hidden="true">
-    <div class="styles__row styles__row--1"></div>
-    <div class="styles__row styles__row--2"></div>
+  <div class="styles__rows">
+    <div class="styles__scroller" data-dir="1" aria-label="Стили анимации, ряд 1"><div class="styles__row styles__row--1"></div></div>
+    <div class="styles__scroller" data-dir="-1" aria-label="Стили анимации, ряд 2"><div class="styles__row styles__row--2"></div></div>
   </div>
+  <p class="styles__hint">Листаются сами, а ещё их можно тянуть вбок</p>
   <div class="styles__center">
     <p class="kicker">Анимация в любом стиле</p>
     <h2 class="h2">20 стилей <em>на выбор</em></h2>
@@ -196,6 +209,19 @@
     </div>
 
     <div class="price__tables"></div>
+
+    <div class="other">
+      <div class="other__card">
+        <p class="other__kicker">Горизонтальные видео</p>
+        <p class="other__price">≈ 900 ₽ <small>за минуту готового видео</small></p>
+        <p>YouTube, документальные и длинные ролики. Это средняя цена, точную назову после того, как посмотрю исходники.</p>
+      </div>
+      <div class="other__card">
+        <p class="other__kicker">Съёмка на Insta360</p>
+        <p class="other__price">Индивидуально</p>
+        <p>Зависит от длины съёмки и того, сколько роликов нужно на выходе. Напишите, посчитаю.</p>
+      </div>
+    </div>
 
     <div class="gift">
       <video class="gift__banner" data-src="assets/video/banner150.webm" poster="assets/img/banner150_still.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
@@ -252,6 +278,7 @@
       </div>
     </div>
     <div class="about__text">
+      <img class="about__circle" src="assets/img/pose_stand.webp" alt="Слава" width="624" height="1000" loading="lazy">
       <p class="kicker">Обо мне</p>
       <h2 class="h2">Привет, <em>я Слава</em></h2>
       <div class="about__chunk" data-pose="0">
