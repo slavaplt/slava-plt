@@ -316,8 +316,8 @@
   /* перетаскивание мышью (на телефоне — обычный свайп) */
   function dragScroll(el, onMove) {
     var down = false, sx = 0, sl = 0;
-    el.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; dragMoved = false; sx = e.clientX; sl = el.scrollLeft; el.classList.add('is-grab'); });
-    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 6) dragMoved = true; el.scrollLeft = sl - dx; if (onMove) onMove(); });
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; down = true; dragMoved = false; sx = e.clientX; sl = el.scrollLeft; });
+    window.addEventListener('pointermove', function (e) { if (!down) return; var dx = e.clientX - sx; if (Math.abs(dx) > 6 && !dragMoved) { dragMoved = true; el.classList.add('is-grab'); } if (!dragMoved) return; el.scrollLeft = sl - dx; if (onMove) onMove(); });
     window.addEventListener('pointerup', function () { if (!down) return; down = false; el.classList.remove('is-grab'); setTimeout(function () { dragMoved = false; }, 50); });
     el.addEventListener('dragstart', function (e) { e.preventDefault(); });
   }
