@@ -465,6 +465,7 @@
 
   gsap.fromTo('.i360__media', { clipPath: 'inset(10% 10% 10% 10% round 28px)', rotate: -3 }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', rotate: 0, ease: 'none', scrollTrigger: { trigger: '.i360', start: 'top 85%', end: 'top 30%', scrub: true } });
   gsap.from('.i360__text > *', { y: 40, opacity: 0, stagger: .08, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.i360', start: 'top 70%' } });
+  gsap.from('.pay__card', { y: 60, opacity: 0, rotate: 2, stagger: .1, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.pay__grid', start: 'top 85%' } });
   gsap.from('.other__card', { y: 50, opacity: 0, stagger: .12, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.other', start: 'top 88%' } });
 
   /* ---------- section heads ---------- */

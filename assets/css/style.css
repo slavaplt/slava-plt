@@ -413,7 +413,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bubble{top:28%;left:auto;right:82%;border-radius:18px 18px 4px 18px;z-index:3}
 .bubble::after{content:"";position:absolute;right:-7px;bottom:10px;width:14px;height:14px;background:var(--cream);clip-path:polygon(0 0,100% 50%,0 100%)}
 @media (max-width:900px){.bubble{top:27%;right:78%;left:auto}}
-@media (max-width:480px){.bubble{top:28%;right:auto;left:-10%;font-size:12px;padding:9px 13px}}
+@media (max-width:600px){.hero__avatar{width:min(70%,300px);margin:30px 0 0 auto}.float-card--2{display:none}.bubble{top:27%;left:auto;right:75%;font-size:12px;padding:9px 13px}}
 
 
 /* вертикальные работы: обычная лента + ползунок */
@@ -496,3 +496,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .other__kicker{color:rgba(17,13,8,.7);font-weight:600}
 .other__price{color:var(--bg)}
 .other__price small,.other__card p:last-child{color:rgba(17,13,8,.75)}
+
+/* ===== оплата ===== */
+.pay{padding:clamp(80px,12vh,150px) 0 0}
+.pay__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;max-width:1400px;margin:clamp(30px,5vh,50px) auto 0;padding:0 var(--pad)}
+.pay__card{position:relative;border:1px solid rgba(240,178,40,.25);border-radius:var(--r);padding:28px 24px;background:linear-gradient(160deg,rgba(240,178,40,.10),rgba(240,178,40,.02) 60%);transition:border-color .4s,translate .5s var(--ease)}
+.pay__card:hover{border-color:var(--honey);translate:0 -4px}
+.pay__ic{width:44px;height:44px;padding:10px;border-radius:14px;background:var(--honey);fill:none;stroke:var(--bg);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;box-shadow:0 10px 26px -10px rgba(240,178,40,.8)}
+.pay__card h3{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.15;margin-top:20px}
+.pay__card p{color:var(--muted);font-size:15px;margin-top:10px}
+.pay__note{max-width:1400px;margin:22px auto 0;padding:0 var(--pad);color:var(--muted);font-size:15px}
+@media (max-width:1000px){.pay__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.pay__grid{grid-template-columns:1fr}.pay__card{padding:22px 20px}}
