@@ -392,8 +392,8 @@
   function intro() {
     var tl = gsap.timeline();
     tl.from('.hero__title .line .ch', { yPercent: 115, rotate: 6, duration: 1, ease: 'power4.out', stagger: .022 })
-      .from('.hero__word-text', { yPercent: 70, opacity: 0, letterSpacing: '.3em', duration: 1.2, ease: 'power4.out' }, '-=.7')
-      .from('.hero__bucks i', { scale: 0, rotate: -40, opacity: 0, duration: .9, ease: 'back.out(2)', stagger: .08 }, '-=.8')
+      .from('.hero__word-text', { yPercent: 60, opacity: 0, duration: 1, ease: 'power4.out' }, '-=.7')
+      .from('.hero__echo', { y: 0, opacity: 0, duration: 1.1, ease: 'power3.out', stagger: .12 }, '-=.6')
       .from('.hero__kicker span, .hero__kicker i', { y: 20, opacity: 0, stagger: .06, duration: .6 }, .2)
       .from('.hero__lead, .hero__ctas, .stats', { y: 30, opacity: 0, stagger: .1, duration: .8, ease: 'power3.out' }, '-=.9')
       .from('.hero__avatar img', { yPercent: 30, opacity: 0, duration: 1.1, ease: 'power3.out' }, .3)
